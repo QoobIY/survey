@@ -21,8 +21,6 @@ router.register(r'surveys', views.SurveyViewSet)
 router.register(r'surveys_field', views.SurveyFieldViewSet)
 router.register(r'surveys_field_choise', views.SurveyFieldChoiceViewSet)
 router.register(r'answer', views.AnswerViewSet)
-router.register(r'answer_field', views.AnswerFieldViewSet)
-router.register(r'answer_text_field', views.AnswerTextFieldViewSet)
 router.register(r'user', views.UserViewSet)
 
 urlpatterns = [

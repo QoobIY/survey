@@ -15,9 +15,44 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import TemplateView
+from rest_framework.schemas import get_schema_view
+from rest_framework.schemas.openapi import SchemaGenerator
+
+
+class TOSSchemaGenerator(SchemaGenerator):
+    def get_schema(self, *args, **kwargs):
+        schema = super().get_schema(*args, **kwargs)
+        schema.update({
+            "security": [
+                {'ApiKeyAuth': []}
+            ],
+        })
+        schema["components"].update({
+                "securitySchemes": {
+                    "ApiKeyAuth": {
+                        "type": "apiKey",
+                        "in": "header",
+                        "name": "Authorization"
+                    }
+                }
+        })
+        return schema
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('main.urls')),
+    path('swagger-ui/', TemplateView.as_view(
+        template_name='main/swagger-ui.html',
+        extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui'),
+    path('openapi', get_schema_view(
+        title="Survey",
+        description="Survey API DOC",
+        version="1.0.0",
+        generator_class=TOSSchemaGenerator,
+        public=True
+    ), name='openapi-schema'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

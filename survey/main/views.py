@@ -1,8 +1,7 @@
 from rest_framework import viewsets
 from main.serializers import SurveySerializer, SurveyFieldSerializer, SurveyFieldChoiceSerializer, \
-    AnswerSerializer, AnswerFieldSerializer, AnswerTextFieldSerializer, AnswerFieldCreateSerializer,  \
-    UserSerializer
-from main.models import Survey, SurveyField, SurveyFieldChoice, Answer, AnswerField, AnswerTextField
+    AnswerSerializer, AnswerFieldSerializer, UserSerializer
+from main.models import Survey, SurveyField, SurveyFieldChoice, Answer, AnswerField
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
@@ -58,19 +57,6 @@ class AnswerViewSet(viewsets.ModelViewSet):
 class AnswerFieldViewSet(viewsets.ModelViewSet):
     serializer_class = AnswerFieldSerializer
     queryset = AnswerField.objects.all()
-
-    def get_serializer_class(self):
-        if self.action == 'create':
-            return AnswerFieldCreateSerializer
-        return super().get_serializer_class()
-
-    def create(self, request, *args, **kwargs):
-        return super().create(request, *args, **kwargs)
-
-
-class AnswerTextFieldViewSet(viewsets.ModelViewSet):
-    serializer_class = AnswerTextFieldSerializer
-    queryset = AnswerTextField.objects.all()
 
 
 class UserViewSet(viewsets.ModelViewSet):

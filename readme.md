@@ -59,11 +59,22 @@ python manage.py runserver
 
 [Swagger ui](http://localhost:8000/swagger-ui)
 
-### Создание пользователя
-
-
 ### Авторизация
 
 #### Получение токена
 
-[logo]: doc/api-token-auth.png "Logo Title Text 2"
+![api-token-auth](doc/api-token-auth.png)
+
+#### Авторизация
+
+В поле Value введите значение в виде
+
+> `Token <token>`
+
+![auth](doc/auth.png)
+
+### Создание пользователя
+
+`/api/v1/user/`
+
+![create-user](doc/create-user.png)
