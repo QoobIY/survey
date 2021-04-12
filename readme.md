@@ -1,7 +1,3 @@
-<style>
-i { color: grey;}
-</style>
-
 # Survey
 
 ## Создание виртуального окружения
@@ -179,12 +175,14 @@ Vary: Accept
 `Админ`
 
 Поля:
-- `name`<span style="color:red">*</span>: Строка, до 150 символов <i>Заголовок опроса</i>
-- `end_date`<span style="color:red">*</span>: Дата в формате YYYY-MM-DD <i>Дата завершения опроса</i>
-- `description`<span style="color:red">*</span>: Текст <i>Описание опроса</i>
+- `name`<span style="color:red">*</span>: Строка, до 150 символов (<i>Заголовок опроса</i>)
+- `end_date`<span style="color:red">*</span>: Дата в формате YYYY-MM-DD (<i>Дата завершения опроса</i>)
+- `description`<span style="color:red">*</span>: Текст <i>Описание опроса</i>)
 
 
-**Добавление поля в опрос**
+### Добавление поля в опрос
+
+<hr>
 
 `POST`
 
@@ -197,29 +195,10 @@ Vary: Accept
 `Админ`
 
 Поля:
-- `survey`<span style="color:red">*</span>: Целое число <i>ID опроса</i>
-- `question`<span style="color:red">*</span>: Строка,  <i>Вопрос</i>
-- `field_type`<span style="color:red">*</span>: "TEXT" | "SINGLE" | "MULTIPLE" <i>Тип поля: ответ текстом, ответ с выбором одного варианта, ответ с выбором нескольких вариантов</i>
+- `survey`<span style="color:red">*</span>: Целое число (<i>ID опроса</i>)
+- `question`<span style="color:red">*</span>: Строка,  (<i>Вопрос</i>)
+- `field_type`<span style="color:red">*</span>: "TEXT" | "SINGLE" | "MULTIPLE" (<i>Тип поля: ответ текстом, ответ с выбором одного варианта, ответ с выбором нескольких вариантов</i>)
 
-
-### Добавление опроса
-
-<hr>
-
-`POST`
-
-> /api/v1/surveys/
-
-
-
-**Доступно**
-
-`Админ`
-
-Поля:
-- `name`<span style="color:red">*</span>: Строка, до 150 символов <i>Заголовок опроса</i>
-- `end_date`<span style="color:red">*</span>: Дата в формате YYYY-MM-DD <i>Дата завершения опроса</i>
-- `description`<span style="color:red">*</span>: Текст <i>Описание опроса</i>
 
 
 ### Добавление значения в поля типа MULTIPLE или SINGLE
@@ -237,27 +216,8 @@ Vary: Accept
 `Админ`
 
 Поля:
-- `field`<span style="color:red">*</span>: Целое число <i>ID Поля</i>
-- `value`<span style="color:red">*</span>: Строка, до 255 символов <i>Одно из значений поля</i>
-
-### Добавление опроса
-
-<hr>
-
-`POST`
-
-> /api/v1/surveys/
-
-
-
-**Доступно**
-
-`Админ`
-
-Поля:
-- `name`<span style="color:red">*</span>: Строка, до 150 символов <i>Заголовок опроса</i>
-- `end_date`<span style="color:red">*</span>: Дата в формате YYYY-MM-DD <i>Дата завершения опроса</i>
-- `description`<span style="color:red">*</span>: Текст <i>Описание опроса</i>
+- `field`<span style="color:red">*</span>: Целое число (<i>ID Поля</i>)
+- `value`<span style="color:red">*</span>: Строка, до 255 символов (<i>Одно из значений поля</i>)
 
 
 ### Список пройденных опросов
@@ -279,7 +239,7 @@ Vary: Accept
 `user_id` (<i>необязательный параметр</i>)
 > получение пройденных пользователем опросов с детализацией по ответам (что выбрано) по ID уникальному пользователя.
 
-**Замечание**
+**Примечание**
 
 Опросы заполненные с флагом `anon=True` видны только пользователю, котороый прошёл опрос.
 
@@ -347,13 +307,13 @@ Vary: Accept
 ]
 ```
 
-### Добавление опроса
+### Заполнение опроса
 
 <hr>
 
 `POST`
 
-> /api/v1/surveys/
+> /api/v1/answer/
 
 
 
@@ -362,21 +322,23 @@ Vary: Accept
 `Админ`
 
 Поля:
-- `survey`<span style="color:red">*</span>: Целое число <i>ID опроса</i>
-- `fields`<span style="color:red">*</span>: Список элементов [AnswerField](1) <i>Дата завершения опроса</i>
+- `survey`<span style="color:red">*</span>: Целое число (<i>ID опроса</i>)
+- `fields`<span style="color:red">*</span>: Список элементов из [AnswerField](#AnswerField)
 
-[1]:
+
 ## AnswerField
+<a id="AnswerField"></a>
 
 | Поле        | Тип           | Описание  |
 | ------------- |:-------------:| -----:|
 | survey_field      | Целое число | ID поля в опросе `survey` |
 | value     | Целое число       |  <span style="color:red">*</span>Обязательно для заполнения для `survey_field` с типом поля **MULTIPLE** или **SINGLE**  |
-| text_field | [AnswerTextField](2)     |    <span style="color:red">*</span>Обязательно для заполнения для `survey_field` с типом поля **TEXT**|
+| text_field | [AnswerTextField](#AnswerTextField)     |    <span style="color:red">*</span>Обязательно для заполнения для `survey_field` с типом поля **TEXT**|
 
 [2]:
 
 ## AnswerTextField
+<a id="AnswerTextField"></a>
 
 | Поле        | Тип           | Описание  |
 | ------------- |:-------------:| -----:|
