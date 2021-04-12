@@ -1,11 +1,19 @@
 from rest_framework import viewsets
+from rest_framework import views
 from main.serializers import SurveySerializer, SurveyFieldSerializer, SurveyFieldChoiceSerializer, \
     AnswerSerializer, AnswerFieldSerializer, UserSerializer
 from main.models import Survey, SurveyField, SurveyFieldChoice, Answer, AnswerField
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny, BasePermission
 from django.contrib.auth import get_user_model
+from django.db.models import Q
+
+
+class OwnerPermission(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        return obj.user == request.user
 
 
 class SurveyViewSet(viewsets.ModelViewSet):
@@ -14,7 +22,7 @@ class SurveyViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'create':
+        if self.action not in ['list', 'retrieve']:
             permission_classes.append(IsAdminUser)
         return [permission() for permission in permission_classes]
 
@@ -25,7 +33,7 @@ class SurveyFieldViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'create':
+        if self.action not in ['list', 'retrieve']:
             permission_classes.append(IsAdminUser)
         return [permission() for permission in permission_classes]
 
@@ -36,7 +44,7 @@ class SurveyFieldChoiceViewSet(viewsets.ModelViewSet):
 
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'create':
+        if self.action not in ['list', 'retrieve']:
             permission_classes.append(IsAdminUser)
         return [permission() for permission in permission_classes]
 
@@ -50,8 +58,25 @@ class ProfileView(APIView):
 
 
 class AnswerViewSet(viewsets.ModelViewSet):
+    permission_classes = []
     serializer_class = AnswerSerializer
     queryset = Answer.objects.all()
+    search_fields = ['=user']
+
+    def get_queryset(self):
+        user = self.request.user
+        query = Q(user=user) | Q(anon=False) if user.id else Q(anon=False)
+        query_user = self.request.query_params.get('user_id')
+        if query_user:
+            query = query & Q(user=query_user)
+        return Answer.objects.filter(query)
+
+    def get_permissions(self):
+        if self.action not in ['list', 'retrieve']:
+            self.permission_classes = (OwnerPermission, IsAuthenticated)
+        else:
+            self.permission_classes = (IsAuthenticated, )
+        return super().get_permissions()
 
 
 class AnswerFieldViewSet(viewsets.ModelViewSet):

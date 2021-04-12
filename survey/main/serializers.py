@@ -24,7 +24,7 @@ class SurveyFieldSerializer(serializers.ModelSerializer):
 
 
 class SurveySerializer(serializers.ModelSerializer):
-    fields = SurveyFieldSerializer(many=True)
+    fields = SurveyFieldSerializer(many=True, read_only=True)
 
     class Meta:
         model = Survey
@@ -54,6 +54,10 @@ class AnswerFieldSerializer(serializers.ModelSerializer):
         #     raise serializers.ValidationError({
         #         'survey_field': 'Survey field does not belong to this answer {}'.format(data['answer'])
         #         })
+        if data['survey_field'].field_type != 'TEXT' and 'value' not in data:
+            raise serializers.ValidationError({
+                    'survey_field': 'Choose at least 1 value for {}'.format(data['survey_field'])
+                    })
         if 'value' in data:
             if data['survey_field'].field_type == 'TEXT':
                 raise serializers.ValidationError({'value': 'Value not allowed for TEXT field_type in {}'.format(data['survey_field'])})

@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Survey(models.Model):
     """Атрибуты опроса: название, дата старта, дата окончания, описание"""
     name = models.CharField(max_length=150, null=False)
-    start_date = models.DateField(null=False)
+    start_date = models.DateField(null=False, auto_now_add=True)
     end_date = models.DateField(null=False)
     description = models.TextField(null=True)
 
@@ -45,6 +45,7 @@ class SurveyFieldChoice(models.Model):
 class Answer(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     survey = models.ForeignKey(Survey, on_delete=models.CASCADE)
+    anon = models.BooleanField(default=False)
 
     def __str__(self) -> str:
         return "Answer<id={}, user={}, survey={}>".format(self.id, self.user, self.survey)
